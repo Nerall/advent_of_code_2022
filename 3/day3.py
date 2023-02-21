@@ -1,34 +1,31 @@
 import sys
 
-def rucksack_priority(lines):
-    priority = 0
-    for line in lines:
-        first, second = line[:len(line) // 2], line[len(line) // 2:]
-        letter = next(iter(set(first).intersection(set(second))))
-        if 'a' <= letter <= 'z':
-            priority += ord(letter) - ord('a') + 1
-        elif 'A' <= letter <= 'Z':
-            priority += ord(letter) - ord('A') + 27
-    print('The sum of priorities of rucksack items is', priority)
+def rucksack_priority(line):
+    first, second = line[:len(line) // 2], line[len(line) // 2:]
+    letter = next(iter(set(first).intersection(second)))
+    if 'a' <= letter <= 'z':
+        priority = ord(letter) - ord('a') + 1
+    elif 'A' <= letter <= 'Z':
+        priority = ord(letter) - ord('A') + 27
+    return priority
 
-def elves_priority(lines):
-    priority = 0
-    for i in range(0, len(lines), 3):
-        elves = lines[i:i+3]
-        letter = next(iter((set(elves[0]).intersection(set(elves[1])
-                                         .intersection(set(elves[2]))))))
-        if 'a' <= letter <= 'z':
-            priority += ord(letter) - ord('a') + 1
-        elif 'A' <= letter <= 'Z':
-            priority += ord(letter) - ord('A') + 27
-    print('The sum of priorities of elf groups is', priority)
+def elves_priority(elves):
+    letter = next(iter(set(elves[0]).intersection(elves[1]).intersection(elves[2])))
+    if 'a' <= letter <= 'z':
+        priority = ord(letter) - ord('a') + 1
+    elif 'A' <= letter <= 'Z':
+        priority = ord(letter) - ord('A') + 27
+    return priority
 
 def main(input_file):
     try:
         with open(input_file) as f:
             lines = f.read().splitlines()
-            rucksack_priority(lines)
-            elves_priority(lines)
+            rucksack_sum = sum([rucksack_priority(line) for line in lines])
+            elves_sum = sum([elves_priority(lines[i:i+3]) for i in range(0, len(lines), 3)])
+            print('The sum of priorities of rucksack items is', rucksack_sum)
+            print('The sum of priorities of elf groups is', elves_sum)
+
 
     except OSError as err:
         print('Error while opening file:', err)

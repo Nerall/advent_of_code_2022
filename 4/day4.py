@@ -1,22 +1,20 @@
 import sys
 
-def compute(lines):
-    overlapping_ranges = 0
-    overlapping_pairs = 0
-    for line in lines:
-        (first_min, first_max), (second_min, second_max) = ((int(el) for el in ss.split('-')) for ss in line.split(','))
-        first_set = set(range(first_min, first_max + 1))
-        second_set = set(range(second_min, second_max + 1))
-        if first_set.issubset(second_set) or second_set.issubset(first_set):
-            overlapping_ranges += 1
-        if first_set.intersection(second_set):
-            overlapping_pairs += 1
-    print(f'There are {overlapping_ranges} overlapping ranges and {overlapping_pairs} overlapping pairs')
+def compute(line):
+    (first_min, first_max), (second_min, second_max) = ((int(el) for el in ss.split('-')) for ss in line.split(','))
+    first_set = set(range(first_min, first_max + 1))
+    second_set = set(range(second_min, second_max + 1))
+    overlapping_range = first_set.issubset(second_set) or second_set.issubset(first_set)
+    overlapping_pair = bool(first_set.intersection(second_set))
+    return overlapping_range, overlapping_pair
 
 def main(input_file):
     try:
         with open(input_file) as f:
-            compute(f.read().splitlines())
+            lines = f.read().splitlines()
+            ranges_sum, pairs_sum = map(sum, zip(*[compute(line) for line in lines]))
+            print(f'There are {ranges_sum} overlapping ranges and {pairs_sum} overlapping pairs')
+
 
     except OSError as err:
         print('Error while opening file:', err)

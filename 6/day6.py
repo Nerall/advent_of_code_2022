@@ -1,19 +1,22 @@
 import sys
 
+def parser(buffer):
+    signal_found = False
+    for i in range(len(buffer) - 3):
+        last_four = buffer[i:i+4]
+        last_fourteen = buffer[i:i+14]
+        if len(set(last_four)) == 4 and not signal_found:
+            print('The first signal marker is after character', i + 4)
+            signal_found = True
+        if len(set(last_fourteen)) == 14:
+            print('The first message marker is after character', i + 14)
+            break
+
+
 def main(input_file):
     try:
         with open(input_file) as f:
-            buffer = f.read().rstrip()
-            signal_found = False
-            for i in range(len(buffer) - 3):
-                last_four = buffer[i:i+4]
-                last_fourteen = buffer[i:i+14]
-                if len(set(last_four)) == 4 and not signal_found:
-                    print('The first signal marker is after character', i + 4)
-                    signal_found = True
-                if len(set(last_fourteen)) == 14:
-                    print('The first message marker is after character', i + 14)
-                    break
+            parser(f.read().rstrip())
 
     except OSError as err:
         print('Error while opening file:', err)
